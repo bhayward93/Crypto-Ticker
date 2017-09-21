@@ -2,9 +2,6 @@
  * Created by Ben Hayward on 18/09/17.
  */
 
-var COIN_FLOOR_URL = "https://api.coindesk.com/v1/bpi/currentprice.json";
-
-setBadgeText(getJSON(COIN_FLOOR_URL));
 function setBadgeText(currentPrice){
     chrome.browserAction.setBadgeText(currentPrice);
 }
