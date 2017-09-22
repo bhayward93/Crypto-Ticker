@@ -13,21 +13,21 @@ Run();
  * Execute the script, adding an event listener to the document if necessary.
  */
 function Run(){
-    if(document.readyState === 'loading' ) {
-        addClick('currentPrice', updateClicked);
-    } else  {
-        document.addEventListener('DOMContentLoaded', addClick('currentPrice', updateClicked()));
-    }
+        if (document.readyState === 'loading') {
+            addClick('#currentPriceGet', updateClicked);
+        } else {
+            $.addEventListener('DOMContentLoaded', addClick('#currentPriceGet', updateClicked()));
+        }
 }
 
 
 /**
  * Adds click functionality to a button.
- * @param id The id of the buttons element.
+ * @param selector The id of the buttons element.
  * @param fn The function for the button to execute.
  */
-function addClick(id, fn) {
-    $(id).addEventListener('click', fn);
+function addClick(selector, fn) {
+        $(selector).on('mousedown', fn);
 }
 
 
@@ -35,20 +35,28 @@ function addClick(id, fn) {
  * The body of the update buttons click functionality.
  */
 function updateClicked(){
-    console.log("Hello from the updateclicked");
-    var temptxt = getJSON(COIN_FLOOR_URL); //currently not firing.
-    setBadgeText(temptxt);
+    var temptxt = getJSON(COIN_FLOOR_URL);
     alert(temptxt);
 }
 
 
 /**
  * Gets JSON from a given URL.
- * @param url the complete URL to retrieve.
+ * @param selecturl the complete URL to retrieve.
  */
-function getJSON(url){
-    $.get(url, function(data, status){
-        alert("Data: " + data + "\nStatus: " + status);
+function getJSON(selecturl){
+    jQuery(document).ready(function($){
+        console.log("Inside getJSON, document ready.");
+        var ajaxReq = $.ajax({
+            url: selecturl,
+            dataType: 'Json',
+            success: function (results) {
+                console.log(results);
+            }
+        });
+      //  $.get(url, function (data, status) {
+
+      //  });
     });
 }
 
@@ -58,7 +66,9 @@ function getJSON(url){
  * @param currentPrice the current price of a Bitcoin.
  */
 function setBadgeText(currentPrice){
-    chrome.browserAction.setBadgeText(currentPrice);
+    jQuery(document).ready(function($) {
+        chrome.browserAction.setBadgeText(currentPrice);
+    });
 }
 
 
