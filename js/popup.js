@@ -2,43 +2,69 @@
  * Created by Ben Hayward on 19/09/17.
  */
 
+//URLs
 var COIN_FLOOR_URL = 'https://api.coindesk.com/v1/bpi/currentprice.json';
 
-checkReadyStateAndExecute();
+Run();
+//Execute the script
 
 
-function checkReadyStateAndExecute(){
+/**
+ * Execute the script, adding an event listener to the document if necessary.
+ */
+function Run(){
     if(document.readyState === 'loading' ) {
-        addClick();
+        addClick('currentPrice', updateClicked);
     } else  {
-        document.addEventListener('DOMContentLoaded', addClick());
+        document.addEventListener('DOMContentLoaded', addClick('currentPrice', updateClicked()));
     }
 }
 
 
-function addClick() {
-    var button = document.getElementById('currentPrice');
-    button.addEventListener('click', updateClicked);
+/**
+ * Adds click functionality to a button.
+ * @param id The id of the buttons element.
+ * @param fn The function for the button to execute.
+ */
+function addClick(id, fn) {
+    $(id).addEventListener('click', fn);
 }
 
 
+/**
+ * The body of the update buttons click functionality.
+ */
 function updateClicked(){
+    console.log("Hello from the updateclicked");
     var temptxt = getJSON(COIN_FLOOR_URL); //currently not firing.
     setBadgeText(temptxt);
     alert(temptxt);
 }
 
 
-function getJSON(url){  //https://api.coindesk.com/v1/bpi/currentprice.json
-    $.ajax.get(url, function(data, status){
+/**
+ * Gets JSON from a given URL.
+ * @param url the complete URL to retrieve.
+ */
+function getJSON(url){
+    $.get(url, function(data, status){
         alert("Data: " + data + "\nStatus: " + status);
     });
 }
 
+
+/**
+ * Sets the badge text to the current price.
+ * @param currentPrice the current price of a Bitcoin.
+ */
 function setBadgeText(currentPrice){
     chrome.browserAction.setBadgeText(currentPrice);
 }
 
-function setBadgeBGColor(){
-    chrome.browserAction.setBadgeBackgroundColor({color: [0,0,255]});
+
+/**
+ * Sets the background color of the button, in future will take the colour as args.
+ */
+function setBadgeBGColor(r ,g, b){
+    chrome.browserAction.setBadgeBackgroundColor({color: [r, g, b]});
 }
