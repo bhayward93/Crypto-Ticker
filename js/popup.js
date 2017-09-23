@@ -13,11 +13,11 @@ Run();
  * Execute the script, adding an event listener to the document if necessary.
  */
 function Run(){
-        if (document.readyState === 'loading') {
-            addClick('#currentPriceGet', updateClicked);
-        } else {
-            $.addEventListener('DOMContentLoaded', addClick('#currentPriceGet', updateClicked()));
-        }
+    if (document.readyState === 'loading') {
+        addClick('#currentPriceGet', updateClicked);
+    } else {
+        $.addEventListener('DOMContentLoaded', addClick('#currentPriceGet', updateClicked()));
+    }
 }
 
 
@@ -35,31 +35,39 @@ function addClick(selector, fn) {
  * The body of the update buttons click functionality.
  */
 function updateClicked(){
-    var temptxt = getJSON(COIN_FLOOR_URL);
-    alert(temptxt);
+    var temptxt = getJSON(COIN_FLOOR_URL, coinDeskJSONAdapter);
+    console.log("CoinFloor JSON Returned:"+temptxt);
 }
 
 
 /**
  * Gets JSON from a given URL.
  * @param selecturl the complete URL to retrieve.
+ * @param fn the function to be called upon the JSONs return.
  */
-function getJSON(selecturl){
+function getJSON(selecturl, fn){
     jQuery(document).ready(function($){
-        console.log("Inside getJSON, document ready.");
-        var ajaxReq = $.ajax({
+        var ajaxReq = $.ajax({ //make an AJAX request
             url: selecturl,
             dataType: 'Json',
-            success: function (results) {
-                console.log(results);
-            }
-        });
-      //  $.get(url, function (data, status) {
-
-      //  });
-    });
+            success: function (results) { //On Success
+                fn(results);
+            }});    });
 }
 
+/**
+ * The adapter to serve CoinDesks response.
+ * @param results
+ */
+function coinDeskJSONAdapter(results){
+    console.log("Inside CoinDesk adapter.");
+    var parsed = $.parseJSON(JSON.stringify(results));
+    console.log("Parsed: " + parsed + " ||  Stringify: " + JSON.stringify(results));
+    console.log("Price in GBP: " + parsed['bpi']['GBP']['rate']);
+    // $.each(results, function(element) { //For each element
+    //     console.log(text);
+    // })
+}
 
 /**
  * Sets the badge text to the current price.
