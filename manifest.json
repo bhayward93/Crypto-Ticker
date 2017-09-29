@@ -5,24 +5,26 @@
   "description": "An Open Source ticker, showing the average current price of Bitcoin, putting ease and simplicity first.",
   "homepage_url": "http://www.benhayward.net",
   "icons": {
-    "16": "icons/icon16.png",
-    "48": "icons/icon48.png",
-    "128": "icons/icon128.png"
+    "16" : "res/logo-16.png",
+    "42" : "res/logo-42.png",
+    "128": "res/logo-128.png"
   },
   "default_locale": "en",
   "background": {
     "scripts": [
-      "src/bg/background.js"
+      "src/bg/background.js",
+      "src/common/jquery/jquery.js"
     ],
     "persistent": true
   },
   "options_page": "src/options_custom/index.html",
   "browser_action": {
-    "default_icon": "icons/icon19.png",
+    "default_icon" : "res/logo-128.png",
     "default_title": "CrytoTicker",
     "default_popup": "/src/browser_action/popup.html"
   },
   "permissions": [
     "geolocation"
   ]
+
 }

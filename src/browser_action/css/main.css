@@ -1,0 +1,28 @@
+body{
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#000000+0,45484d+100 */
+    background: #000000; /* Old browsers */
+    background: -moz-linear-gradient(-45deg, #000000 0%, #45484d 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(-45deg, #000000 0%,#45484d 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(135deg, #000000 0%,#45484d 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#45484d',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+.title{
+    color: #FFFDFD;
+    text-align: center;
+}
+
+.subtitle{
+    font-weight: bold;
+    color: #CBD2D0;
+}
+
+.refreshbutton{
+    width: 100%;
+    background: #000604;
+    text-align: center;
+    font-weight: bold;
+    color: #CBD2D0;
+    border-color: #45484d;
+}
