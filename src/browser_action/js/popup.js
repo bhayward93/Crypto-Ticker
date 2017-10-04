@@ -1,17 +1,22 @@
 /**
  * Created by Ben Hayward on 19/09/17.
+ * Manages the popups functionality.
  */
 
-//Enum for supported currencies.
-var currencyEnum = {
-    'GBP' : 0,
-    'EUR' : 1,
-    'USD' : 2
-};
+//Include
 
+$.getScript( "../common/currencyEnum.js", function( data, textStatus, jqxhr ) {
+    console.log( data ); // Data returned
+    console.log( textStatus ); // Success
+    console.log( jqxhr.status ); // 200
+    console.log( "Load was performed." );
+});
+
+var EXT_ID = 'kindgboflaljopjnjegdkhkhllhlblpo'; //TODO Combine into strings file when more vars to fill the class.
+
+//port.onMessage.addListener(function(msg) {});
 
 run(); //Execute the script
-
 
 
 /**
@@ -20,12 +25,12 @@ run(); //Execute the script
 function run(){
     if (document.readyState === 'loading') {
         registerEventListeners();
-
         //addClick('#currentPriceGet', registerEventHanders);
     } else {
         $.addEventListener('DOMContentLoaded', registerEventListeners);
     }
 }
+
 
 /**
  * All event listeners are registered in here.
@@ -34,6 +39,7 @@ function registerEventListeners(){
     $("#currencyList").on('change', dropdownAutoSwitcher);
     $("#currentPriceGet").on('mousedown', updateClicked);
 }
+
 
 /**
  * Adds click functionality to a button.
@@ -65,7 +71,8 @@ function dropdownAutoSwitcher(){
             _currency = currencyEnum.GBP; //default currency
             break;
     }
-    console.log("Current Currency: " + _currency);
+    sendMessage({clicked:"currencyChanged"}); //click.false
+    console.log("Switcher Triggered Current Currency: " + _currency);
 }
 
 
@@ -73,8 +80,8 @@ function dropdownAutoSwitcher(){
  * The body of the update buttons click functionality.
  */
 function updateClicked(){
-    console.log("Updating price...");
-    sendMessage({clicked:true});
+    console.log("update clicked");
+    sendMessage({clicked:"update"});
 }
 
 
@@ -82,12 +89,8 @@ function updateClicked(){
  * Sends the JSON response to the background script.
  */
 function sendMessage(msg){
-    console.log("Sending Message To Background.");
-    chrome.runtime.sendMessage("kindgboflaljopjnjegdkhkhllhlblpo", msg, function(response) {
+    console.log("Sending Message To Background: "+msg);
+    chrome.runtime.sendMessage(EXT_ID, msg, function(response) {
+        console.log("Received =" + response);
     });
-
 }
-
-
-
-

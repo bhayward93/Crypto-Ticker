@@ -1,24 +1,47 @@
+/**
+ * Created by Ben Hayward on 19/09/17.
+ * Manages the background processing for the extension.
+ */
+
+//Include
+// $.getScript( "../common/currencyEnum.js", function( data, textStatus, jqxhr ) {
+//     console.log( data ); // Data returned
+//     console.log( textStatus ); // Success
+//     console.log( jqxhr.status ); // 200
+//     console.log( "Load was performed." );
+// });
+
 //URLs
+var EXT_ID = 'kindgboflaljopjnjegdkhkhllhlblpo';
 var COIN_FLOOR_URL = 'https://api.coindesk.com/v1/bpi/currentprice.json';
 var _currency = 'GBP'; //Temp default val TODO: Make this detect location.
 
-chrome.browserAction.setBadgeBackgroundColor({color: [225, 0, 0,
-    100]}); //does not match definition...
+chrome.browserAction.setBadgeBackgroundColor({color: [0, 0, 0, 225]}); //does not match definition...
+getFromAllSources();    //Simulate an update quick so the price is displayed on load.
 
-chrome.runtime.onMessage.addListener(messageReceived);
-getFromAllSources(); //Simulate an update quick so the price is displayed on load.
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        console.log(sender.tab ?
+            "from a content script:" + sender.tab.url :
+            "from the extension");
+
+        if (request.clicked === "update") {
+            sendResponse({received: true});
+            getFromAllSources();
+        }
+        else if (request.clicked === "currencyChanged") {
+            sendResponse({received: "true"});
+            alert("currency changed!");
+            console.log("Current currency:" + _currency);
+            console.log("msg.currency: " + msg.currency);
+            console.log("msg.cur.val : " + msg.currency.val());
+            _currency = msg._currency;
+            console.log("Currency after changing: " + _currency);
+        }
+    });
 
 
-
-/**
- * Handles any valid messages received.
- */
-function messageReceived(msg) {
-    if(msg.clicked) {
-        console.log("message received");
-        getFromAllSources();
-    }
-}
+//TODO: https://developer.chrome.com/apps/messaging
 
 
 /**
@@ -30,24 +53,13 @@ function getFromAllSources(){
 
 
 /**
- * Sets the badge text to the current price.
- * @param currentPrice the current price of a Bitcoin.
- */
-function setBadgeText(currentPrice){
-    jQuery(document).ready(function() {
-        chrome.browserAction.setBadgeText(currentPrice);
-    });
-}
-
-
-/**
  * The adapter to serve CoinDesks response.
  * @param results
  */
 function coinDeskJSONAdapter(results){
     var parsed = $.parseJSON(JSON.stringify(results));
     var rate = parsed['bpi'][_currency]['rate'];
-    setBadgeText({text:rate});
+    setBadgeText({text: rate});
 }
 
 
@@ -58,12 +70,25 @@ function coinDeskJSONAdapter(results){
  */
 function getJSON(selectUrl, fn){
     console.log("getting JSON");
-    jQuery(document).ready(function($){
-        $.ajax({ //make an AJAX request
-            url: selectUrl,
-            dataType: 'Json',
-            success: function (results) { //On Success
-                fn(results);
-            }});
+        jQuery(document).ready(function() {
+            $.ajax({ //make an AJAX request
+                url: selectUrl,
+                dataType: 'Json',
+                success: function (results) { //On Success
+                    fn(results);
+                }
+            });
     });
+}
+
+
+/**
+ * Sets the badge text to the current price.
+ * @param currentPrice the current price of a Bitcoin.
+ */
+function setBadgeText(currentPrice){
+    jQuery(document).ready(function() {
+        chrome.browserAction.setBadgeText(currentPrice);
+    });
+    console.log("price changed to: "+currentPrice.toString());
 }

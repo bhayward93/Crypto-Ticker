@@ -12,8 +12,9 @@
   "default_locale": "en",
   "background": {
     "scripts": [
-      "src/bg/background.js",
-      "src/common/jquery/jquery.js"
+      "src/common/jquery/jquery.min.js",
+      "src/common/currencyEnum.js",
+      "src/bg/background.js"
     ],
     "persistent": true
   },

@@ -5,53 +5,44 @@
 -->
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title id="title"></title>
-        
-        <!-- Stylesheets -->
-        <link id="favicon" rel="icon" href="">
-        <link rel="stylesheet" href="lib/default.css" media="screen">
-        <link rel="stylesheet" href="css/main.css" media="screen">
-        <link rel="stylesheet" href="css/setting.css" media="screen">
-        <link rel="stylesheet" href="custom.css" media="screen">
-        
-        <!-- JavaScripts -->
-        <script src="lib/mootools-core.js"></script>
-        <script src="lib/store.js"></script>
-        <script src="js/classes/tab.js"></script>
-        <script src="js/classes/setting.js"></script>
-        <script src="js/classes/search.js"></script>
-        <script src="js/classes/fancy-settings.js"></script>
-        <script src="i18n.js"></script>
-        <script src="js/i18n.js"></script>
-        <script src="manifest.js"></script>
-        <script src="settings.js"></script>
-    </head>
-    <body class="no-select">
-        <div id="sidebar" class="fancy">
-            <img id="icon" src="" alt=""><h1 id="settings-label"></h1>
-            <div id="tab-container">
-                <div id="search-container" class="tab">
-                    <input id="search" type="search" placeholder="">
-                </div>
-            </div>
-        </div>
-        <div id="content">
-            <div id="search-result-container" class="tab-content">
-                <div class="tab-content show">
-                    <h2>Settings</h2>
-         <table class="setting group">
+<head>
+    <meta charset="utf-8">
+    <title id="title"></title>
+
+    <!-- Stylesheets -->
+    <link id="favicon" rel="icon" href="">
+    <link rel="stylesheet" href="lib/default.css" media="screen">
+    <link rel="stylesheet" href="css/main.css" media="screen">
+    <link rel="stylesheet" href="css/setting.css" media="screen">
+    <link rel="stylesheet" href="custom.css" media="screen">
+
+    <!-- JavaScripts -->
+    <script src="lib/mootools-core.js"></script>
+    <script src="lib/store.js"></script>
+    <script src="js/classes/tab.js"></script>
+    <script src="js/classes/setting.js"></script>
+    <script src="js/classes/search.js"></script>
+    <script src="js/classes/fancy-settings.js"></script>
+    <script src="i18n.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="manifest.js"></script>
+    <script src="settings.js"></script>
+</head>
+<body class="no-select">
+    <div id="content">
+        <table class="setting group">
             <tr>
-                <td class="setting group-name">Currency</td>
+                <td class="setting group-name">Currency:</td>
+                <td class="setting group-content">
+                    <select class="setting Currency" id="currencyList">
+                        <option value="GBP">Great British Pound (GBP)</option>
+                        <option value="USD">United States Dollar (USD)</option>
+                        <option value="EUR">Euro (EUR)</option>
+                    </select>
+                </td>
                 <td class="setting group-content">
 
                 </td>
-            </tr>
-         </table>
-            </div>
-            </div>
-        </div>
-        </div>
-    </body>
+            </tr></table></div>
+</body>
 </html>
