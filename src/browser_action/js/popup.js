@@ -3,15 +3,6 @@
  * Manages the popups functionality.
  */
 
-//Include
-
-$.getScript( "../common/currencyEnum.js", function( data, textStatus, jqxhr ) {
-    console.log( data ); // Data returned
-    console.log( textStatus ); // Success
-    console.log( jqxhr.status ); // 200
-    console.log( "Load was performed." );
-});
-
 var EXT_ID = 'kindgboflaljopjnjegdkhkhllhlblpo'; //TODO Combine into strings file when more vars to fill the class.
 
 var port = chrome.runtime.connect(EXT_ID, {name: "refresh"});
@@ -35,7 +26,6 @@ function run(){
         $.addEventListener('DOMContentLoaded', registerEventListeners);
     }
 }
-
 
 /**
  * All event listeners are registered in here.

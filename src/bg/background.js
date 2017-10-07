@@ -12,8 +12,8 @@
 // });
 
 //URLs
-var EXT_ID = 'kindgboflaljopjnjegdkhkhllhlblpo';
 var COIN_FLOOR_URL = 'https://api.coindesk.com/v1/bpi/currentprice.json';
+
 var _currency = 'GBP'; //Temp default val TODO: Make this detect location.
 
 
@@ -25,23 +25,20 @@ chrome.runtime.onConnect.addListener(function(port) {
     console.log("Connected to port: "+port.name);
     port.onMessage.addListener(function(msg) {
         console.log("from the extension");
-        if(msg.currencyChanged){
-            sendResponse({received: true});
+        console.log("message.update: "+msg.update);
+        console.log("message.currencyChanged: "+msg.currencyChanged);
+        console.log("message.currencyChanged is int: " +
+            Number.isInteger(msg.currencyChanged));
+        if(Number.isInteger(msg.currencyChanged)){
             console.log("Current currency:" + _currency);
-            console.log("msg.currency: " + msg.currency);
-            console.log("msg.cur.val : " + msg.currency.val());
+            port.postMessage({received: true});
+            console.log("msg.currency: " + msg.currencyChanged);
             _currency = msg._currency;
             console.log("Currency after changing: " + _currency);
-        } else if(Number.isInteger(msg.update)){
-            sendResponse({received: true});
-            getFromAllSources();
+        } else if(msg.update){
+             port.postMessage({received: true});
+             getFromAllSources();
         }})});
-
-// chrome.runtime.onConnect.addListener(
-//     function(request, sender, sendResponse) {
-//
-//     });
-
 
 //TODO: https://developer.chrome.com/apps/messaging
 
