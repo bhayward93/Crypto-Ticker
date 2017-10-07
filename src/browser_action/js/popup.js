@@ -14,7 +14,12 @@ $.getScript( "../common/currencyEnum.js", function( data, textStatus, jqxhr ) {
 
 var EXT_ID = 'kindgboflaljopjnjegdkhkhllhlblpo'; //TODO Combine into strings file when more vars to fill the class.
 
-//port.onMessage.addListener(function(msg) {});
+var port = chrome.runtime.connect(EXT_ID, {name: "refresh"});
+port.onMessage.addListener(function(msg) {
+    if(msg.recieved){
+        console.log("Message received.");
+    }
+});
 
 run(); //Execute the script
 
@@ -46,17 +51,17 @@ function registerEventListeners(){
  * @param selector The id of the buttons element.
  * @param fn The function for the button to execute.
  */
-function addClick(selector, fn) {
-    $(selector).on('mousedown', fn);
-}
+// function addClick(selector, fn) {
+//     $(selector).on('mousedown', fn);
+// }
 
 
 /**
- * Handles the event for the dropdown menu's release onto a new currency.
+ * Handles the event for the drop-down menu's release onto a new currency.
  */
 function dropdownAutoSwitcher(){
     var e = document.getElementById("currencyList");
-    console.log("currencyList: " + e);
+    console.log("currencyList: entered");
     switch(e.value) {
         case 'GBP':
             _currency = currencyEnum.GBP;
@@ -71,7 +76,7 @@ function dropdownAutoSwitcher(){
             _currency = currencyEnum.GBP; //default currency
             break;
     }
-    sendMessage({clicked:"currencyChanged"}); //click.false
+    sendMessage({currencyChanged: _currency}); //DOES NOT SEND
     console.log("Switcher Triggered Current Currency: " + _currency);
 }
 
@@ -81,7 +86,7 @@ function dropdownAutoSwitcher(){
  */
 function updateClicked(){
     console.log("update clicked");
-    sendMessage({clicked:"update"});
+    sendMessage({update: true});
 }
 
 
@@ -90,7 +95,9 @@ function updateClicked(){
  */
 function sendMessage(msg){
     console.log("Sending Message To Background: "+msg);
-    chrome.runtime.sendMessage(EXT_ID, msg, function(response) {
-        console.log("Received =" + response);
-    });
+    try {
+        port.postMessage(msg);
+    } catch(err){
+        console.log(err.message);
+    }
 }
