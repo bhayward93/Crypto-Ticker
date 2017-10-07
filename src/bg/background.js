@@ -14,7 +14,7 @@
 //URLs
 var COIN_FLOOR_URL = 'https://api.coindesk.com/v1/bpi/currentprice.json';
 
-var _currency = 'GBP'; //Temp default val TODO: Make this detect location.
+var _currency = currencyEnum.GBP; //Temp default val TODO: Make this detect location.
 
 
 chrome.browserAction.setBadgeBackgroundColor({color: [0, 0, 0, 225]}); //does not match definition...
@@ -24,21 +24,16 @@ chrome.runtime.onConnect.addListener(function(port) {
     console.assert(port.name === "refresh");
     console.log("Connected to port: "+port.name);
     port.onMessage.addListener(function(msg) {
-        console.log("from the extension");
-        console.log("message.update: "+msg.update);
-        console.log("message.currencyChanged: "+msg.currencyChanged);
-        console.log("message.currencyChanged is int: " +
-            Number.isInteger(msg.currencyChanged));
         if(Number.isInteger(msg.currencyChanged)){
-            console.log("Current currency:" + _currency);
             port.postMessage({received: true});
-            console.log("msg.currency: " + msg.currencyChanged);
-            _currency = msg._currency;
+            _currency = msg.currencyChanged;
             console.log("Currency after changing: " + _currency);
         } else if(msg.update){
+             console.log('Update request made.');
              port.postMessage({received: true});
-             getFromAllSources();
-        }})});
+        }
+        getFromAllSources();
+    })});
 
 //TODO: https://developer.chrome.com/apps/messaging
 
@@ -57,7 +52,8 @@ function getFromAllSources(){
  */
 function coinDeskJSONAdapter(results){
     var parsed = $.parseJSON(JSON.stringify(results));
-    var rate = parsed['bpi'][_currency]['rate'];
+    console.log('Current Currency Key:'+Object.keys(currencyEnum)[_currency]);
+    var rate = parsed['bpi'][Object.keys(currencyEnum)[_currency]]['rate'];
     setBadgeText({text: rate});
 }
 
