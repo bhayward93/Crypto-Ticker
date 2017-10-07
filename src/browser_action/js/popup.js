@@ -1,6 +1,6 @@
 /**
  * Created by Ben Hayward on 19/09/17.
- * Manages the popups functionality.
+ * Manages the popup functionality.
  */
 
 var EXT_ID = 'kindgboflaljopjnjegdkhkhllhlblpo'; //TODO Combine into strings file when more vars to fill the class.
@@ -37,16 +37,6 @@ function registerEventListeners(){
 
 
 /**
- * Adds click functionality to a button.
- * @param selector The id of the buttons element.
- * @param fn The function for the button to execute.
- */
-// function addClick(selector, fn) {
-//     $(selector).on('mousedown', fn);
-// }
-
-
-/**
  * Handles the event for the drop-down menu's release onto a new currency.
  */
 function dropdownAutoSwitcher(){
@@ -66,7 +56,7 @@ function dropdownAutoSwitcher(){
             _currency = currencyEnum.GBP; //default currency
             break;
     }
-    sendMessage({currencyChanged: _currency}); //DOES NOT SEND
+    sendMessage({currencyChanged: _currency});
     console.log("Switcher Triggered Current Currency: " + _currency);
 }
 
@@ -82,6 +72,7 @@ function updateClicked(){
 
 /**
  * Sends the JSON response to the background script.
+ * @param msg The JSON object to be sent.
  */
 function sendMessage(msg){
     console.log("Sending Message To Background: "+msg);
@@ -91,3 +82,14 @@ function sendMessage(msg){
         console.log(err.message);
     }
 }
+
+
+
+/**
+ * Adds click functionality to a button.
+ * @param selector The id of the buttons element.
+ * @param fn The function for the button to execute.
+ */
+// function addClick(selector, fn) {
+//     $(selector).on('mousedown', fn);
+// }

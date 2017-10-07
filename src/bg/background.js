@@ -3,39 +3,30 @@
  * Manages the background processing for the extension.
  */
 
-//Include
-// $.getScript( "../common/currencyEnum.js", function( data, textStatus, jqxhr ) {
-//     console.log( data ); // Data returned
-//     console.log( textStatus ); // Success
-//     console.log( jqxhr.status ); // 200
-//     console.log( "Load was performed." );
-// });
-
 //URLs
 var COIN_FLOOR_URL = 'https://api.coindesk.com/v1/bpi/currentprice.json';
 
 var _currency = currencyEnum.GBP; //Temp default val TODO: Make this detect location.
 
-
+//init
 chrome.browserAction.setBadgeBackgroundColor({color: [0, 0, 0, 225]}); //does not match definition...
 getFromAllSources();    //Simulate an update quick so the price is displayed on load.
 
+//Ports and listeners are used to send and recieve messages.
 chrome.runtime.onConnect.addListener(function(port) {
-    console.assert(port.name === "refresh");
+    console.assert(port.name === "refresh");      //Check port name
     console.log("Connected to port: "+port.name);
-    port.onMessage.addListener(function(msg) {
-        if(Number.isInteger(msg.currencyChanged)){
+    port.onMessage.addListener(function(msg) {    //Add listener for message
+        if(Number.isInteger(msg.currencyChanged)){ //Currency sent through as an integer?
             port.postMessage({received: true});
             _currency = msg.currencyChanged;
-            console.log("Currency after changing: " + _currency);
+            console.log("Currency changed to: " + _currency);
         } else if(msg.update){
              console.log('Update request made.');
              port.postMessage({received: true});
         }
-        getFromAllSources();
+        getFromAllSources(); //Get and update badge.
     })});
-
-//TODO: https://developer.chrome.com/apps/messaging
 
 
 /**
@@ -48,11 +39,10 @@ function getFromAllSources(){
 
 /**
  * The adapter to serve CoinDesks response.
- * @param results
+ * @param results JSON results
  */
 function coinDeskJSONAdapter(results){
     var parsed = $.parseJSON(JSON.stringify(results));
-    console.log('Current Currency Key:'+Object.keys(currencyEnum)[_currency]);
     var rate = parsed['bpi'][Object.keys(currencyEnum)[_currency]]['rate'];
     setBadgeText({text: rate});
 }
