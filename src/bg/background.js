@@ -4,7 +4,7 @@
  */
 
 //URLs
-var COIN_FLOOR_URL = 'https://api.coindesk.com/v1/bpi/currentprice.json';
+var COIN_DESK_URL = 'https://api.coindesk.com/v1/bpi/currentprice.json';
 
 var _currency = currencyEnum.GBP; //Temp default val TODO: Make this detect location.
 
@@ -26,6 +26,7 @@ chrome.runtime.onConnect.addListener(function(port) {
              port.postMessage({received: true});
         }
         getFromAllSources(); //Get and update badge.
+        
     })});
 
 
@@ -33,18 +34,7 @@ chrome.runtime.onConnect.addListener(function(port) {
  * Calls from all API sources.
  */
 function getFromAllSources(){
-    getJSON(COIN_FLOOR_URL, coinDeskJSONAdapter);
-}
-
-
-/**
- * The adapter to serve CoinDesks response.
- * @param results JSON results
- */
-function coinDeskJSONAdapter(results){
-    var parsed = $.parseJSON(JSON.stringify(results));
-    var rate = parsed['bpi'][Object.keys(currencyEnum)[_currency]]['rate'];
-    setBadgeText({text: rate});
+    getJSON(COIN_DESK_URL, coinDeskJSONAdapter);
 }
 
 
@@ -76,4 +66,14 @@ function setBadgeText(currentPrice){
         chrome.browserAction.setBadgeText(currentPrice);
     });
     console.log("price changed to: "+currentPrice.toString());
+}
+
+/**
+ * The adapter to serve CoinDesks response.
+ * @param results JSON results
+ */
+function coinDeskJSONAdapter(results){
+    var parsed = $.parseJSON(JSON.stringify(results));
+    var rate = parsed['bpi'][Object.keys(currencyEnum)[_currency]]['rate'];
+    setBadgeText({text: rate});
 }
