@@ -14,10 +14,14 @@
     "scripts": [
       "src/common/jquery/jquery.min.js",
       "src/common/currencyEnum.js",
-      "src/bg/background.js"
+      "src/bg/background.js",
+      "src/common/bootstrap-select-1.13.2/dist/js/bootstrap-select.min.js"
     ],
     "persistent": true
   },
+  "web_accessible_resources": [
+   "/home/nemo/personal/CryptoTicker/src/common/bootstrap-select-1.13.2/dist/css/bootstrap-select.min.css"
+  ],
   "options_page": "src/options_custom/index.html",
   "browser_action": {
     "default_icon" : "res/logo-128.png",
@@ -25,7 +29,7 @@
     "default_popup": "/src/browser_action/popup.html"
   },
   "permissions": [
-    "geolocation"
+    "storage"
   ]
 
 }

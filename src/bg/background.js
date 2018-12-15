@@ -4,10 +4,10 @@
  */
 
 //URLs
-var COIN_DESK_URL = 'https://api.coindesk.com/v1/bpi/currentprice.json';
-
-var _currency = currencyEnum.GBP; //Temp default val TODO: Make this detect location.
-
+const COIN_DESK_URL = 'https://api.coindesk.com/v1/bpi/currentprice.json';
+const COIN_GECKO_URL = 'https://api.coingecko.com/api/v3/coins/list'
+let _currency = currencyEnum.GBP; //Temp default val TODO: Make this detect location.
+let _coinsList = [];
 //init
 chrome.browserAction.setBadgeBackgroundColor({color: [0, 0, 0, 225]}); //does not match definition...
 getFromAllSources();    //Simulate an update quick so the price is displayed on load.
@@ -26,8 +26,9 @@ chrome.runtime.onConnect.addListener(function(port) {
              port.postMessage({received: true});
         }
         getFromAllSources(); //Get and update badge.
-        
-    })});
+
+    })
+});
 
 
 /**
@@ -55,7 +56,9 @@ function getJSON(selectUrl, fn){
             });
     });
 }
-
+// getJSON(COIN_GECKO_URL, function(res){
+//     console.log(res)
+// })
 
 /**
  * Sets the badge text to the current price.
@@ -76,4 +79,31 @@ function coinDeskJSONAdapter(results){
     var parsed = $.parseJSON(JSON.stringify(results));
     var rate = parsed['bpi'][Object.keys(currencyEnum)[_currency]]['rate'];
     setBadgeText({text: rate});
+}
+
+chrome.storage.local.get(['coinList'], function(result) {
+    if (result[1] == null) {
+        console.log("Coins list not yet loaded")
+        getCoinsList();
+
+    }else{
+        port.postMessage({currencyListStored: true})
+        this._coinsList = result;
+    }
+});
+//_coinsList.map(e=>console.dir(e))
+function getCoinsList(){
+    return $.ajax({ //make an AJAX request
+        url: COIN_GECKO_URL,
+        dataType: 'JSON',
+        success: function (results) { //On Success
+            chrome.storage.local.set({"coinList": results}, function() {
+                console.log("storing coinList in local storage");
+                chrome.runtime.sendMessage({
+                        coinsListStored: true
+                });
+            });
+            this._coinsList = results
+        }
+    });
 }

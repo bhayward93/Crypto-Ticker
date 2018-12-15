@@ -3,18 +3,41 @@
  * Manages the popup functionality.
  */
 
-var EXT_ID = 'kindgboflaljopjnjegdkhkhllhlblpo'; //TODO Combine into strings file when more vars to fill the class.
+const EXT_ID = 'kindgboflaljopjnjegdkhkhllhlblpo'; //TODO Combine into strings file when more vars to fill the class.
+let _coinsList= [];
+let port = chrome.runtime.connect(EXT_ID, {name: "refresh"});
+//
+// chrome.runtime.onMessage.addListener(
+//     function(request, sender, sendResponse) {
+//         console.log("popup js listening")
+//         if (request.data.currencyListStored) {
+//             //  To do something
+//             console.dir(request.data);
+//         }
+//     }
+// );
+//
 
-var port = chrome.runtime.connect(EXT_ID, {name: "refresh"});
-port.onMessage.addListener(function(msg) {
-    if(msg.recieved){
-        console.log("Message received.");
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        if (request.coinsListStored) {
+            chrome.storage.local.get('coinList', function(value){
+                console.log(value.coinList)
+                // let wrapper = document.getElementById('firstDropdownWrapper');
+                // let dropdown = document.getElementById('currencyList')
+                value.coinList.map((coin) => {
+                    $(".selectpicker").append('<option value="'+coin.symbol+'" selected="">'+coin.name+'</option>');
+                })
+                $('.selectpicker').selectpicker();
+                $('.selectpicker').selectpicker('render');
+                $('.selectpicker').selectpicker('refresh');
+
+
+
+            })
+        }
     }
-});
-
-run(); //Execute the script
-
-
+);
 /**
  * Execute the script, adding an event listener to the document if necessary.
  */
